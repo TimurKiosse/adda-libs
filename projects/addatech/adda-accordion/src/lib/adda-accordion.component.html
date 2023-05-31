@@ -1,0 +1,73 @@
+<ng-container *ngIf="showUi">
+<div class="cm-accordion" #cmAccordion
+	[class.collapsed]="!isOpen"
+>
+  <div class="cm-accordion-head">
+	  <div class="cm-accordion-title" (click)="isOpen=!isOpen">
+		  <a  class="cm-accordion-toggle-btn">
+			  <i [ngClass]="iconToggleClass"></i>
+      </a>
+		  <b class="cursor-pointer">{{title}}</b>
+	  </div>
+    <div class="cm-accordion-actions">
+      <ng-container *ngIf="visibleActions?.length>0">
+        <a *ngFor="let visibleAction of visibleActions"
+          href="javascript:void(0)"
+           [ngClass]="visibleAction?.actionIconClass"
+           [title]="visibleAction?.actionName"
+           (click)="actionClicked.emit(visibleAction)">
+        </a>
+      </ng-container>
+      <ng-container *ngIf="dropdownActions?.length>0">
+
+	      <div class="dropdown" [class.open]="ddMenuOpened">
+
+		      <a href="javascript:void(0)" class="fs20 text-medium vam"
+			      (click)="ddMenuOpened = !ddMenuOpened">
+			      <i class="{{iconMoreClass}}"></i>
+		      </a>
+
+		      <ul class="dropdown-menu" (click)="ddMenuOpened = false">
+			      <ng-container *ngFor="let action of actions">
+				      <li>
+					      <a href="javascript:void(0)"
+						      (click)="actionClicked.emit(action)">
+						      <i *ngIf="action?.actionIconClass" [ngClass]="action?.actionIconClass"></i>
+						      {{action?.actionName}}
+					      </a>
+				      </li>
+
+				      <!--
+							<li class="divider"></li>
+							-->
+
+			      </ng-container>
+		      </ul>
+	      </div>
+
+      </ng-container>
+
+    </div>
+  </div>
+
+  <div class="cm-accordion-content"
+       [@openCloseStateHeight]="isOpen ? 'open' : 'closed'"
+   >
+	  <div class="cm-accordion-content-wrapper">
+		  <!--<ng-content></ng-content>-->
+      <ng-container *ngTemplateOutlet="content"></ng-container>
+	  </div>
+
+  </div>
+</div>
+
+</ng-container>
+<ng-container *ngIf="!showUi">
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+</ng-container>
+
+<ng-template #content>
+  <ng-content></ng-content>
+</ng-template>
+
+
